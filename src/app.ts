@@ -15,6 +15,7 @@ export default () => {
   type Query {
     greetings: String
     users: [User!]
+    user: User
   }
 
   type User{
@@ -33,6 +34,13 @@ export default () => {
         const users = await getConnection().getRepository(User).find();
         console.log('users', users);
         return users;
+      },
+      user: async (_parent: null, { id }: { id: number }) => {
+        const user = await getConnection().getRepository(User).findOne(id);
+        if (user) {
+          return user;
+        }
+        return {};
       },
 
     },
