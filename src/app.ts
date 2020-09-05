@@ -1,6 +1,9 @@
 import express from 'express';
 import { ApolloServer, gql } from 'apollo-server-express';
 import { getConnection, getManager } from 'typeorm';
+
+import bcryptjs from 'bcryptjs'
+
 import User from './entities/User';
 
 export default () => {
@@ -15,7 +18,7 @@ export default () => {
   type Query {
     greetings: String
     users: [User!]
-    user: User
+    user(id: ID): User
   }
 
   type User{
@@ -49,7 +52,7 @@ export default () => {
         if (user) {
           return user;
         }
-        return {};
+        throw new Error('there is no user with this id');
       },
 
     },
@@ -60,7 +63,7 @@ export default () => {
         const newUser = new User();
         newUser.name = input.name;
         newUser.email = input.email;
-        newUser.hashPassword = input.password;
+        newUser.hashPassword = await bcryptjs.hash(input.password, 12);
         try {
           const savedUser = await getManager().save(newUser);
           return savedUser;
