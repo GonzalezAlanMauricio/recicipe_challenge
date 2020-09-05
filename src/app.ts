@@ -1,6 +1,6 @@
 import express from 'express';
 import { ApolloServer, gql } from 'apollo-server-express';
-import { getConnection } from 'typeorm';
+import { getConnection, getManager } from 'typeorm';
 import User from './entities/User';
 
 export default () => {
@@ -22,7 +22,16 @@ export default () => {
     id: ID,
     name: String,
     email: String,
-    hashPassword: String
+  }
+
+  input newUser {
+    name: String!
+    email: String!
+    password: String!
+  }
+
+  type Mutation{
+    signUp(input: newUser!): User
   }
 
 `;
@@ -41,6 +50,24 @@ export default () => {
           return user;
         }
         return {};
+      },
+
+    },
+    Mutation: {
+      signUp: async (_parent: null,
+        { input }: { input: { name: string, email: string, password: string } }) => {
+        console.log('Input', input);
+        const newUser = new User();
+        newUser.name = input.name;
+        newUser.email = input.email;
+        newUser.hashPassword = input.password;
+        try {
+          const savedUser = await getManager().save(newUser);
+          return savedUser;
+        } catch (error) {
+          console.log(error);
+          throw new Error('Server error, we will fix it soon');
+        }
       },
 
     },
