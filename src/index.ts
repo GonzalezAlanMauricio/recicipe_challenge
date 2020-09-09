@@ -1,7 +1,10 @@
 import { createConnection } from 'typeorm';
 import 'reflect-metadata';
 import startApp from './app';
+
 import User from './entities/User';
+import Recipe from './entities/Recipe';
+import Category from './entities/Category';
 
 const startDBConnection = async () => {
   try {
@@ -15,7 +18,7 @@ const startDBConnection = async () => {
       synchronize: true,
       logging: false,
       entities: [
-        User,
+        User, Recipe, Category,
       ],
     });
     // here you can start to work with your entities
