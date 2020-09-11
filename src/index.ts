@@ -21,7 +21,6 @@ const startDBConnection = async () => {
         User, Recipe, Category,
       ],
     });
-    // here you can start to work with your entities
     startApp();
     console.log('Connected to data base');
   } catch (error) {

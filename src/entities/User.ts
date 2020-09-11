@@ -1,4 +1,9 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+/* eslint-disable no-unused-vars */
+import {
+  Entity, PrimaryGeneratedColumn, Column, OneToMany,
+} from 'typeorm';
+
+import Recipe from './Recipe';
 
 @Entity()
 export default class User {
@@ -13,4 +18,7 @@ export default class User {
 
   @Column()
   hashPassword: string;
+
+  @OneToMany((_type) => Recipe, (recipe) => recipe.user)
+  recipes: Recipe[];
 }

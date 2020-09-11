@@ -29,6 +29,8 @@ export default () => {
     id: ID!,
     name: String!,
     email: String!,
+    password: String!
+    recipes: [Recipe!]
   }
 
   type Category{
@@ -42,6 +44,7 @@ export default () => {
     name: String!
     description: String!
     category: Category!
+    user: User!
   }
 
   input newUser {
@@ -54,6 +57,7 @@ export default () => {
     name: String!,
     description: String!,
     categoryId: ID!
+    userId: ID!
   }
 
   input newCategory {
@@ -72,7 +76,7 @@ export default () => {
     Query: {
 
       users: async () => {
-        const users = await getConnection().getRepository(User).find();
+        const users = await getConnection().getRepository(User).find({ relations: ['recipes'] });
         return users;
       },
 
@@ -85,13 +89,13 @@ export default () => {
       },
 
       getRecipes: async () => {
-        const recipes = await getConnection().getRepository(Recipe).find({ relations: ['category'] });
+        const recipes = await getConnection().getRepository(Recipe).find({ relations: ['category', 'user'] });
         console.log('recipes', recipes);
         return recipes;
       },
 
       getOneRecipe: async (_parent: null, { id }: { id: number }) => {
-        const recipe = await getConnection().getRepository(Recipe).findOne(id, { relations: ['category'] });
+        const recipe = await getConnection().getRepository(Recipe).findOne(id, { relations: ['category', 'user'] });
         if (recipe) {
           return recipe;
         }
@@ -122,23 +126,24 @@ export default () => {
       },
 
       createRecipe: async (_parent: null,
-        { input }: { input: { name: string, description: string, categoryId: Category } }) => {
+        { input }: {
+          input:
+          { name: string, description: string, categoryId: Category, userId: User }
+        }) => {
         const newRecipe = new Recipe();
-        console.log('..........-------------------');
-        console.log(input);
-        console.log('..........-------------------');
         newRecipe.name = input.name;
         newRecipe.description = input.description;
         try {
           const category = await getConnection().getRepository(Category).findOne(input.categoryId);
+          const user = await getConnection().getRepository(User).findOne(input.userId);
+          if (user) {
+            newRecipe.user = user;
+          } else {
+            throw new UserInputError('User not found');
+          }
           if (category) {
             newRecipe.category = category;
-            console.log('category', category);
-            if (!category.recipes) category.recipes = [];
-            category.recipes.push(newRecipe);
-            await getManager().save(category);
             const savedRecipe = await getManager().save(newRecipe);
-            console.log('savedRecipe', savedRecipe);
             return savedRecipe;
           }
           throw new UserInputError('Category not found');

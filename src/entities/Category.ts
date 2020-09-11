@@ -13,7 +13,6 @@ export default class Category {
   @Column()
   name: string;
 
-  // @ts-ignore
-  @OneToMany((type) => Recipe, (recipe: Recipe) => recipe.category)
-  recipes: Recipe[]
+  @OneToMany((_type) => Recipe, (recipe: Recipe) => recipe.category)
+  recipes: Recipe[];
 }

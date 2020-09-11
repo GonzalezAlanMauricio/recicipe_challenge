@@ -28,6 +28,7 @@
     "typescript": "^3.8.3"
   },
   "scripts": {
+    "dev:debug": "nodemon --inspect src/entry.ts",
     "dev": "nodemon src/index.ts"
   },
   "keywords": [],
