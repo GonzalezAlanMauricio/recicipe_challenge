@@ -22,8 +22,16 @@ export default gql`
     userId: ID!
   }
 
+  input updatedRecipe {
+    name: String
+    description: String
+    categoryId: ID
+    userId: ID
+  }
+
   extend type Mutation{
     createRecipe(input: newRecipe!): Recipe
+    updateRecipe(id: ID!, input: updatedRecipe!): Recipe
     deleteRecipe(id: ID!): Recipe
   }
 

@@ -55,6 +55,36 @@ export default {
       }
     },
 
+    updateRecipe: async (_: null, { id, input }: {
+      id: string,
+      input: { name: string, description: string, categoryId: Category, userId: User }
+    }) => {
+      try {
+        const recipeRepository = await getConnection().getRepository(Recipe);
+        const recipeToUpdate = await recipeRepository.findOne(id);
+        if (!recipeToUpdate) throw new UserInputError('Recipe not found');
+        const recipeUpdated = { ...recipeToUpdate, ...input };
+        const category = await getConnection().getRepository(Category).findOne(input.categoryId);
+        const user = await getConnection().getRepository(User).findOne(input.userId);
+        if (user) {
+          recipeUpdated.user = user;
+        } else {
+          throw new UserInputError('User not found');
+        }
+        if (category) {
+          recipeUpdated.category = category;
+          await recipeRepository.save(recipeUpdated);
+          return recipeUpdated;
+        }
+        throw new UserInputError('Category not found');
+      } catch (_e) {
+        let error: Error = _e;
+        console.log(error);
+        if (error.name !== 'UserInputError') error = new Error('Server error, we will fix it soon');
+        throw error;
+      }
+    },
+
     deleteRecipe: async (_parent: null, { id }: { id: string }) => {
       try {
         const recipeToDelete = await getConnection().getRepository(Recipe).findOne(id, { relations: ['category', 'user'] });
