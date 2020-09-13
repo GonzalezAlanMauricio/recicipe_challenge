@@ -1,8 +1,10 @@
 import express from 'express';
-import { ApolloServer, gql, UserInputError } from 'apollo-server-express';
+import { ApolloServer, UserInputError } from 'apollo-server-express';
 import { getConnection, getManager } from 'typeorm';
 
 import bcryptjs from 'bcryptjs';
+
+import typeDefs from './typeDefs/index';
 
 import User from './entities/User';
 import Recipe from './entities/Recipe';
@@ -14,63 +16,6 @@ export default () => {
   app.use(express.json());
 
   const PORT = process.env.PORT || '3000';
-
-  const typeDefs = gql`
-
-  type Query {
-    users: [User!]
-    user(id: ID): User
-    getRecipes: [Recipe!]
-    getCategories: [Category!]
-    getOneRecipe(id: ID): Recipe
-  }
-
-  type User{
-    id: ID!,
-    name: String!,
-    email: String!,
-    password: String!
-    recipes: [Recipe!]
-  }
-
-  type Category{
-    id: ID!,
-    name: String!
-    recipes: [Category!]
-  }
-
-  type Recipe{
-    id: ID!
-    name: String!
-    description: String!
-    category: Category!
-    user: User!
-  }
-
-  input newUser {
-    name: String!
-    email: String!
-    password: String!
-  }
-
-  input newRecipe {
-    name: String!,
-    description: String!,
-    categoryId: ID!
-    userId: ID!
-  }
-
-  input newCategory {
-    name: String!,
-  }
-
-  type Mutation{
-    signUp(input: newUser!): User
-    createRecipe(input: newRecipe!): Recipe
-    createCategory(input: newCategory!): Category
-  }
-
-`;
 
   const resolvers = {
     Query: {
@@ -90,7 +35,6 @@ export default () => {
 
       getRecipes: async () => {
         const recipes = await getConnection().getRepository(Recipe).find({ relations: ['category', 'user'] });
-        console.log('recipes', recipes);
         return recipes;
       },
 
@@ -111,7 +55,6 @@ export default () => {
     Mutation: {
       signUp: async (_parent: null,
         { input }: { input: { name: string, email: string, password: string } }) => {
-        console.log('Input', input);
         const newUser = new User();
         newUser.name = input.name;
         newUser.email = input.email;
@@ -162,7 +105,6 @@ export default () => {
         newCategory.recipes = [];
         try {
           const savedCategory = await getManager().save(newCategory);
-          console.log('savedCategory', savedCategory);
           return savedCategory;
         } catch (error) {
           console.log(error);

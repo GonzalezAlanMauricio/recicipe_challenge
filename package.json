@@ -7,6 +7,7 @@
     "apollo-server-express": "^2.17.0",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
+    "esm": "^3.2.25",
     "express": "^4.17.1",
     "graphql": "^15.3.0",
     "helmet": "^4.1.0",
@@ -28,8 +29,9 @@
     "typescript": "^3.8.3"
   },
   "scripts": {
-    "dev:debug": "nodemon --inspect src/entry.ts",
-    "dev": "nodemon src/index.ts"
+    "start": "node -r esm build/index.ts",
+    "dev:debug": "nodemon -r esm --inspect src/index.ts",
+    "dev": "nodemon -r esm src/index.ts"
   },
   "keywords": [],
   "author": "",
