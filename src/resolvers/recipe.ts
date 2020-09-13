@@ -62,6 +62,7 @@ export default {
         await getConnection().createQueryBuilder().delete().from(Recipe)
           .where('id = :id', { id })
           .execute();
+        return recipeToDelete;
       } catch (_e) {
         let error: Error = _e;
         console.log(error);
