@@ -31,7 +31,8 @@
   "scripts": {
     "start": "node -r esm build/index.ts",
     "dev:debug": "nodemon -r esm --inspect src/index.ts",
-    "dev": "nodemon -r esm src/index.ts"
+    "dev": "nodemon -r esm src/index.ts",
+    "dl": "kill -9 $(ss -lp | grep 3000|grep -o -E \"pid=[0-9]+\" | grep -o -E \"[0-9]+\") && nodemon -r esm src/index.ts"
   },
   "keywords": [],
   "author": "",

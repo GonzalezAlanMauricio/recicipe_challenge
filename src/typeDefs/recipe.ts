@@ -16,15 +16,15 @@ export default gql`
   }
 
   input newRecipe {
-    name: String!,
-    description: String!,
+    name: String!
+    description: String!
     categoryId: ID!
     userId: ID!
   }
 
-
   extend type Mutation{
     createRecipe(input: newRecipe!): Recipe
+    deleteRecipe(id: ID!): Recipe
   }
 
 `;

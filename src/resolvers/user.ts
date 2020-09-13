@@ -13,7 +13,7 @@ export default {
     },
 
     user: async (_parent: null, { id }: { id: number }) => {
-      const user = await getConnection().getRepository(User).findOne(id);
+      const user = await getConnection().getRepository(User).findOne(id, { relations: ['recipes'] });
       if (user) {
         return user;
       }
