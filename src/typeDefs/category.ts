@@ -16,8 +16,13 @@ export default gql`
     name: String!,
   }
 
+  input updatedCategory {
+    name: String!,
+  }
+
   extend type Mutation{
     createCategory(input: newCategory!): Category
+    updateCategory(id: ID!, input: updatedCategory!): Category
     deleteCategory(id: ID!): Category
   }
 

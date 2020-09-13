@@ -14,7 +14,7 @@ export default {
   },
   Mutation: {
 
-    createCategory: async (_parent: null,
+    createCategory: async (_: null,
       { input }: { input: { name: string } }) => {
       const newCategory = new Category();
       newCategory.name = input.name;
@@ -28,7 +28,23 @@ export default {
       }
     },
 
-    deleteCategory: async (_parent: null, { id }: { id: string }) => {
+    updateCategory: async (_: null, { id, input }: { id: string, input: { name: string } }) => {
+      try {
+        const categoryRepository = await getConnection().getRepository(Category);
+        const categoryToUpdate = await categoryRepository.findOne(id);
+        if (!categoryToUpdate) throw new UserInputError('Category not found');
+        categoryToUpdate.name = input.name;
+        await categoryRepository.save(categoryToUpdate);
+        return categoryToUpdate;
+      } catch (_e) {
+        let error: Error = _e;
+        console.log(error);
+        if (error.name !== 'UserInputError') error = new Error('Server error, we will fix it soon');
+        throw error;
+      }
+    },
+
+    deleteCategory: async (_: null, { id }: { id: string }) => {
       try {
         const categoryToDelete = await getConnection().getRepository(Category).findOne(id, { relations: ['recipes'] });
         if (!categoryToDelete) throw new UserInputError('Category not found');
