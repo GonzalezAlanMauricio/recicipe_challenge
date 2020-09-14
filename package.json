@@ -7,17 +7,21 @@
     "apollo-server-express": "^2.17.0",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
     "esm": "^3.2.25",
     "express": "^4.17.1",
     "graphql": "^15.3.0",
     "helmet": "^4.1.0",
+    "jsonwebtoken": "^8.5.1",
     "mysql": "^2.18.1",
     "reflect-metadata": "^0.1.13",
     "typeorm": "^0.2.25"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.2",
+    "@types/dotenv": "^8.2.0",
     "@types/express": "^4.17.7",
+    "@types/jsonwebtoken": "^8.5.0",
     "@types/node": "^13.13.5",
     "@typescript-eslint/eslint-plugin": "^2.31.0",
     "@typescript-eslint/parser": "^2.31.0",
@@ -29,8 +33,8 @@
     "typescript": "^3.8.3"
   },
   "scripts": {
-    "start": "node -r esm build/index.ts",
-    "dev:debug": "nodemon -r esm --inspect src/index.ts",
+    "start": "node build/index.js",
+    "dev:debug": "nodemon src/index.ts",
     "dev": "nodemon -r esm src/index.ts",
     "dl": "kill -9 $(ss -lp | grep 3000|grep -o -E \"pid=[0-9]+\" | grep -o -E \"[0-9]+\") && nodemon -r esm src/index.ts"
   },

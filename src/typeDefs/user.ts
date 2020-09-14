@@ -21,8 +21,18 @@ export default gql`
     password: String!
   }
 
+  input loginInput {
+    email: String!
+    password: String!
+  }
+
+  type Token {
+    token: String!
+  }
+
   extend type Mutation{
     signUp(input: newUser!): User
+    login(input: loginInput!): Token
   }
 
 `;
