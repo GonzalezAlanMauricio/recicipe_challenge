@@ -33,9 +33,9 @@ export default {
         const categoryRepository = await getConnection().getRepository(Category);
         const categoryToUpdate = await categoryRepository.findOne(id);
         if (!categoryToUpdate) throw new UserInputError('Category not found');
-        categoryToUpdate.name = input.name;
-        await categoryRepository.save(categoryToUpdate);
-        return categoryToUpdate;
+        const categoryUpdated = { ...categoryToUpdate, name: input.name };
+        await categoryRepository.save(categoryUpdated);
+        return categoryUpdated;
       } catch (_e) {
         let error: Error = _e;
         console.log(error);
