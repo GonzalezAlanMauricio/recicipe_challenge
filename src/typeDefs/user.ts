@@ -5,6 +5,7 @@ export default gql`
   extend type Query {
     users: [User!]
     user(id: ID): User
+    getMyRecipes: [Recipe!]
   }
 
   type User{

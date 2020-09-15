@@ -2,12 +2,22 @@ import { getConnection, getManager } from 'typeorm';
 
 import bcryptjs from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-
 import { UserInputError } from 'apollo-server-express';
+
 import User from '../entities/User';
+import Recipe from '../entities/Recipe';
+
+import isAuthenticated from './middleware/index';
 
 export default {
   Query: {
+
+    getMyRecipes: async (_: null, __: null,
+      { email, userId }: { email: string; userId: number }): Promise<Recipe[]> => {
+      isAuthenticated(email);
+      const recipes = await getConnection().getRepository(Recipe).find({ where: { user: userId }, relations: ['category'] });
+      return recipes;
+    },
 
     users: async (): Promise<User[]> => {
       const users = await getConnection().getRepository(User).find({ relations: ['recipes'] });
