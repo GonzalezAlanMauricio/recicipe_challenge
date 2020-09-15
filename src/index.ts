@@ -6,6 +6,8 @@ import User from './entities/User';
 import Recipe from './entities/Recipe';
 import Category from './entities/Category';
 
+require('dotenv').config();
+
 const startDBConnection = async () => {
   try {
     await createConnection({

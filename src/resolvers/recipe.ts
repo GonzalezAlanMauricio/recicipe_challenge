@@ -5,15 +5,20 @@ import User from '../entities/User';
 import Recipe from '../entities/Recipe';
 import Category from '../entities/Category';
 
+import isAuthenticated from './middleware/index';
+
 export default {
   Query: {
 
-    getRecipes: async () => {
+    getRecipes: async (_: null, __: null, { email }: { email: string }): Promise<Recipe[]> => {
+      isAuthenticated(email);
       const recipes = await getConnection().getRepository(Recipe).find({ relations: ['category', 'user'] });
       return recipes;
     },
 
-    getOneRecipe: async (_parent: null, { id }: { id: number }) => {
+    getOneRecipe: async (_: null, { id }: { id: number },
+      { email }: { email: string }): Promise<Recipe> => {
+      isAuthenticated(email);
       const recipe = await getConnection().getRepository(Recipe).findOne(id, { relations: ['category', 'user'] });
       if (recipe) {
         console.log('recipe', recipe);
@@ -25,11 +30,12 @@ export default {
   },
   Mutation: {
 
-    createRecipe: async (_parent: null,
+    createRecipe: async (_: null,
       { input }: {
         input:
-        { name: string, description: string, categoryId: Category, userId: User }
-      }) => {
+        { name: string; description: string; categoryId: Category; userId: User };
+      }, { email }: { email: string }): Promise<Recipe> => {
+      isAuthenticated(email);
       const newRecipe = new Recipe();
       newRecipe.name = input.name;
       newRecipe.description = input.description;
@@ -56,9 +62,10 @@ export default {
     },
 
     updateRecipe: async (_: null, { id, input }: {
-      id: string,
-      input: { name: string, description: string, categoryId: Category, userId: User }
-    }) => {
+      id: string;
+      input: { name: string; description: string; categoryId: Category; userId: User };
+    }, { email }: { email: string }): Promise<Recipe> => {
+      isAuthenticated(email);
       try {
         const recipeRepository = await getConnection().getRepository(Recipe);
         const recipeToUpdate = await recipeRepository.findOne(id);
@@ -85,7 +92,9 @@ export default {
       }
     },
 
-    deleteRecipe: async (_parent: null, { id }: { id: string }) => {
+    deleteRecipe: async (_parent: null, { id }: { id: string },
+      { email }: { email: string }): Promise<Recipe> => {
+      isAuthenticated(email);
       try {
         const recipeToDelete = await getConnection().getRepository(Recipe).findOne(id, { relations: ['category', 'user'] });
         if (!recipeToDelete) throw new UserInputError('Recipe not found');

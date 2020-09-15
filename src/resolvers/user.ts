@@ -1,13 +1,10 @@
 import { getConnection, getManager } from 'typeorm';
 
-import * as dotenv from 'dotenv';
 import bcryptjs from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
 import { UserInputError } from 'apollo-server-express';
 import User from '../entities/User';
-
-dotenv.config();
 
 export default {
   Query: {
@@ -29,7 +26,7 @@ export default {
 
   Mutation: {
 
-    login: async (_: null, { input }: { input: { email: string, password: string } }) => {
+    login: async (_: null, { input }: { input: { email: string; password: string } }) => {
       try {
         const { password, email } = input;
         const user = await getConnection().getRepository(User).findOne({ where: { email }, relations: ['recipes'] });
@@ -47,7 +44,7 @@ export default {
     },
 
     signUp: async (_: null,
-      { input }: { input: { name: string, email: string, password: string } }) => {
+      { input }: { input: { name: string; email: string; password: string } }) => {
       const newUser = new User();
       newUser.name = input.name;
       newUser.email = input.email;
