@@ -3,10 +3,13 @@ import { getConnection, getManager } from 'typeorm';
 
 import Category from '../entities/Category';
 
+import isAuthenticated from './middleware/index';
+
 export default {
   Query: {
 
-    getCategories: async () => {
+    getCategories: async (_: null, __: null, { email }: { email: string }): Promise<Category[]> => {
+      isAuthenticated(email);
       const categories = await getConnection().getRepository(Category).find({ relations: ['recipes'] });
       return categories;
     },
@@ -15,7 +18,8 @@ export default {
   Mutation: {
 
     createCategory: async (_: null,
-      { input }: { input: { name: string } }) => {
+      { input }: { input: { name: string } }, { email }: { email: string }): Promise<Category> => {
+      isAuthenticated(email);
       const newCategory = new Category();
       newCategory.name = input.name;
       newCategory.recipes = [];
@@ -28,7 +32,10 @@ export default {
       }
     },
 
-    updateCategory: async (_: null, { id, input }: { id: string, input: { name: string } }) => {
+    updateCategory: async (_: null,
+      { id, input }: { id: string; input: { name: string } },
+      { email }: { email: string }): Promise<Category> => {
+      isAuthenticated(email);
       try {
         const categoryRepository = await getConnection().getRepository(Category);
         const categoryToUpdate = await categoryRepository.findOne(id);
@@ -44,7 +51,9 @@ export default {
       }
     },
 
-    deleteCategory: async (_: null, { id }: { id: string }) => {
+    deleteCategory: async (_: null, { id }: { id: string },
+      { email }: { email: string }): Promise<Category> => {
+      isAuthenticated(email);
       try {
         const categoryToDelete = await getConnection().getRepository(Category).findOne(id, { relations: ['recipes'] });
         if (!categoryToDelete) throw new UserInputError('Category not found');

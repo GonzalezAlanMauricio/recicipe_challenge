@@ -9,7 +9,7 @@ import User from '../entities/User';
 export default {
   Query: {
 
-    users: async () => {
+    users: async (): Promise<User[]> => {
       const users = await getConnection().getRepository(User).find({ relations: ['recipes'] });
       return users;
     },
