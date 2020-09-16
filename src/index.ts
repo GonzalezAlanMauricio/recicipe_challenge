@@ -5,6 +5,7 @@ import startApp from './app';
 import User from './entities/User';
 import Recipe from './entities/Recipe';
 import Category from './entities/Category';
+import Ingredient from './entities/Ingredient';
 
 require('dotenv').config();
 
@@ -20,7 +21,7 @@ const startDBConnection = async () => {
       synchronize: true,
       logging: false,
       entities: [
-        User, Recipe, Category,
+        User, Recipe, Category, Ingredient,
       ],
     });
     startApp();

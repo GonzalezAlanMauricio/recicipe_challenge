@@ -3,6 +3,7 @@ import { gql } from 'apollo-server-express';
 import userTypeDefs from './user';
 import recipeTypeDefs from './recipe';
 import categoryTypeDefs from './category';
+import ingredientTypeDefs from './ingredient';
 
 const typeDefs = gql`
 
@@ -17,5 +18,5 @@ const typeDefs = gql`
 `;
 
 export default [
-  userTypeDefs, typeDefs, categoryTypeDefs, recipeTypeDefs,
+  userTypeDefs, typeDefs, categoryTypeDefs, recipeTypeDefs, ingredientTypeDefs,
 ];
