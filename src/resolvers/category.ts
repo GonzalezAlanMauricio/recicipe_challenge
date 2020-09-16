@@ -14,6 +14,16 @@ export default {
       return categories;
     },
 
+    getOneCategory: async (_: null,
+      { id }: { id: number }, { email }: { email: string }): Promise<Category> => {
+      isAuthenticated(email);
+      const category = await getConnection().getRepository(Category).findOne(id, { relations: ['recipes'] });
+      if (category) {
+        return category;
+      }
+      throw new UserInputError('There is no category with this id');
+    },
+
   },
   Mutation: {
 

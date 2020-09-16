@@ -4,6 +4,7 @@ export default gql`
 
   extend type Query {
     getCategories: [Category!]
+    getOneCategory(id: ID!): Category
   }
 
   type Category{
