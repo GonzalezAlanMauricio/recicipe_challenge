@@ -9,7 +9,7 @@ export default gql`
   type Category{
     id: ID!,
     name: String!
-    recipes: [Category!]
+    recipes: [Recipe!]
   }
 
   input newCategory {
