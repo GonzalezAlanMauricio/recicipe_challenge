@@ -33,11 +33,12 @@ export default {
     createRecipe: async (_: null,
       { input }: {
         input:
-        { name: string; description: string; categoryId: Category };
+        { name: string; description: string; categoryId: Category, ingredients: string };
       }, { email, userId }: { email: string; userId: number }): Promise<Recipe> => {
       isAuthenticated(email);
       const newRecipe = new Recipe();
       newRecipe.name = input.name;
+      newRecipe.ingredients = input.ingredients;
       newRecipe.description = input.description;
       try {
         const category = await getConnection().getRepository(Category).findOne(input.categoryId);

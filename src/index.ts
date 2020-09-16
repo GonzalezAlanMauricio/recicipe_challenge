@@ -16,7 +16,7 @@ const startDBConnection = async () => {
       port: 3306,
       username: 'root',
       password: '1234',
-      database: 'test',
+      database: 'challenge',
       synchronize: true,
       logging: false,
       entities: [

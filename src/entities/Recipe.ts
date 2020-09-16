@@ -17,6 +17,9 @@ export default class Recipes {
   @Column()
   description: string;
 
+  @Column()
+  ingredients: string;
+
   @ManyToOne((_type) => Category, (category: Category) => category.recipes, { onDelete: 'CASCADE' })
   category: Category;
 

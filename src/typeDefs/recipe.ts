@@ -11,6 +11,7 @@ export default gql`
     id: ID!
     name: String!
     description: String!
+    ingredients: String!
     category: Category!
     user: User!
   }
@@ -18,12 +19,14 @@ export default gql`
   input newRecipe {
     name: String!
     description: String!
+    ingredients: String!
     categoryId: ID!
   }
 
   input updatedRecipe {
     name: String
     description: String
+    ingredients: String
     categoryId: ID
   }
 
