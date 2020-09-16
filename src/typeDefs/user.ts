@@ -42,6 +42,7 @@ export default gql`
     signUp(input: newUser!): User
     login(input: loginInput!): Token
     updateMyAccount(input: updateInput!): User
+    deleteMyAccount: User
   }
 
 `;

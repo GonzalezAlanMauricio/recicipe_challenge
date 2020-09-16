@@ -20,6 +20,6 @@ export default class Recipes {
   @ManyToOne((_type) => Category, (category: Category) => category.recipes)
   category: Category;
 
-  @ManyToOne((_type) => User, (user) => user.recipes)
+  @ManyToOne((_type) => User, (user) => user.recipes, { onDelete: 'CASCADE' })
   user: User;
 }

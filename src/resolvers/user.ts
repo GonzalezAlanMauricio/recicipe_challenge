@@ -57,6 +57,24 @@ export default {
         throw error;
       }
     },
+    deleteMyAccount: async (_: null, __: null,
+      { email, userId }: { email: string; userId: number }): Promise<User> => {
+      isAuthenticated(email);
+      try {
+        const userToDelete = await getConnection()
+          .getRepository(User).findOne(userId, { relations: ['recipes'] });
+        if (!userToDelete) throw new UserInputError('User not found');
+        await getConnection().createQueryBuilder().delete().from(User)
+          .where('id = :id', { id: userId })
+          .execute();
+        return userToDelete;
+      } catch (_e) {
+        let error: Error = _e;
+        console.log(error);
+        if (error.name !== 'UserInputError') error = new Error('Server error, we will fix it soon');
+        throw error;
+      }
+    },
 
     login: async (_: null,
       { input }: { input: { email: string; password: string } }): Promise<object> => {

@@ -19,6 +19,6 @@ export default class User {
   @Column()
   hashPassword: string;
 
-  @OneToMany((_type) => Recipe, (recipe) => recipe.user)
+  @OneToMany((_type) => Recipe, (recipe) => recipe.user, { onDelete: 'CASCADE' })
   recipes: Recipe[];
 }

@@ -89,7 +89,7 @@ export default {
       }
     },
 
-    deleteRecipe: async (_parent: null, { id }: { id: string },
+    deleteRecipe: async (_: null, { id }: { id: string },
       { email }: { email: string }): Promise<Recipe> => {
       isAuthenticated(email);
       try {
