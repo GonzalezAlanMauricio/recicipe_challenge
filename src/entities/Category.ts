@@ -13,6 +13,6 @@ export default class Category {
   @Column()
   name: string;
 
-  @OneToMany((_type) => Recipe, (recipe: Recipe) => recipe.category)
+  @OneToMany((_type) => Recipe, (recipe: Recipe) => recipe.category, { onDelete: 'CASCADE' })
   recipes: Recipe[];
 }
