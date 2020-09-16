@@ -19,14 +19,12 @@ export default gql`
     name: String!
     description: String!
     categoryId: ID!
-    userId: ID!
   }
 
   input updatedRecipe {
     name: String
     description: String
     categoryId: ID
-    userId: ID
   }
 
   extend type Mutation{

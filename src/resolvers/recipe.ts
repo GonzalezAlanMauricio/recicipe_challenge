@@ -33,21 +33,18 @@ export default {
     createRecipe: async (_: null,
       { input }: {
         input:
-        { name: string; description: string; categoryId: Category; userId: User };
-      }, { email }: { email: string }): Promise<Recipe> => {
+        { name: string; description: string; categoryId: Category };
+      }, { email, userId }: { email: string; userId: number }): Promise<Recipe> => {
       isAuthenticated(email);
       const newRecipe = new Recipe();
       newRecipe.name = input.name;
       newRecipe.description = input.description;
       try {
         const category = await getConnection().getRepository(Category).findOne(input.categoryId);
-        const user = await getConnection().getRepository(User).findOne(input.userId);
-        if (user) {
-          newRecipe.user = user;
-        } else {
-          throw new UserInputError('User not found');
-        }
+        console.log('userId', userId);
+        const user = await getConnection().getRepository(User).findOne(userId) as User;
         if (category) {
+          newRecipe.user = user;
           newRecipe.category = category;
           const savedRecipe = await getManager().save(newRecipe);
           return savedRecipe;
