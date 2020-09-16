@@ -14,41 +14,27 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const apollo_server_express_1 = require("apollo-server-express");
-const typeorm_1 = require("typeorm");
-const User_1 = __importDefault(require("./entities/User"));
+const index_1 = __importDefault(require("./typeDefs/index"));
+const index_2 = __importDefault(require("./resolvers/index"));
+const index_3 = __importDefault(require("./helper/index"));
 exports.default = () => {
     const app = express_1.default();
     app.use(express_1.default.json());
     const PORT = process.env.PORT || '3000';
-    const typeDefs = apollo_server_express_1.gql `
-
-  type Query {
-    greetings: String
-    users: [User!]
-  }
-
-  type User{
-    id: ID,
-    name: String,
-    email: String,
-    hashPassword: String
-  }
-
-`;
-    const resolvers = {
-        Query: {
-            greetings: () => 'Hello!',
-            users: () => __awaiter(void 0, void 0, void 0, function* () {
-                const users = yield typeorm_1.getConnection().getRepository(User_1.default).find();
-                console.log('users', users);
-                return users;
-            }),
-        },
-    };
-    const server = new apollo_server_express_1.ApolloServer({ typeDefs, resolvers });
+    const server = new apollo_server_express_1.ApolloServer({
+        typeDefs: index_1.default,
+        resolvers: index_2.default,
+        context: ({ req }) => __awaiter(void 0, void 0, void 0, function* () {
+            let contextObj = {};
+            yield index_3.default(req);
+            contextObj = { email: req.email, userId: req.userId };
+            return contextObj;
+        }),
+    });
     server.applyMiddleware({ app, path: '/recipes' });
     app.listen(PORT, () => {
         console.log(`Server running in ${PORT}`);
         console.log(`Graphql endpoint ${server.graphqlPath}`);
     });
 };
+//# sourceMappingURL=app.js.map

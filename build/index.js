@@ -15,9 +15,25 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const typeorm_1 = require("typeorm");
 require("reflect-metadata");
 const app_1 = __importDefault(require("./app"));
+const User_1 = __importDefault(require("./entities/User"));
+const Recipe_1 = __importDefault(require("./entities/Recipe"));
+const Category_1 = __importDefault(require("./entities/Category"));
+require('dotenv').config();
 const startDBConnection = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        yield typeorm_1.createConnection();
+        yield typeorm_1.createConnection({
+            type: 'mysql',
+            host: process.env.DB_HOST,
+            port: parseInt(process.env.DB_PORT, 10),
+            username: process.env.DB_USERNAME,
+            password: process.env.DB_PASSWORD,
+            database: process.env.DB_NAME,
+            synchronize: true,
+            logging: false,
+            entities: [
+                User_1.default, Recipe_1.default, Category_1.default,
+            ],
+        });
         app_1.default();
         console.log('Connected to data base');
     }
@@ -27,3 +43,4 @@ const startDBConnection = () => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 startDBConnection();
+//# sourceMappingURL=index.js.map
