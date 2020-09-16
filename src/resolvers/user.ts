@@ -24,7 +24,7 @@ export default {
       return users;
     },
 
-    user: async (_: null, { id }: { id: number }) => {
+    user: async (_: null, { id }: { id: number }): Promise<User> => {
       const user = await getConnection().getRepository(User).findOne(id, { relations: ['recipes'] });
       if (user) {
         return user;
@@ -36,7 +36,30 @@ export default {
 
   Mutation: {
 
-    login: async (_: null, { input }: { input: { email: string; password: string } }) => {
+    updateMyAccount: async (_: null, { input }: {
+      input: { name: string; email: string; password: string };
+    }, { email, userId }: { email: string; userId: number }): Promise<User> => {
+      isAuthenticated(email);
+      try {
+        const userRepository = await getConnection().getRepository(User);
+        const userToUpdate = await userRepository.findOne(userId);
+        let userUpdated = { ...userToUpdate, ...input };
+        if (input.password) {
+          const hashPassword = await bcryptjs.hash(input.password, 12);
+          userUpdated = { ...userUpdated, hashPassword };
+        }
+        await userRepository.save(userUpdated);
+        return userUpdated as User;
+      } catch (_e) {
+        let error: Error = _e;
+        console.log(error);
+        if (error.name !== 'UserInputError') error = new Error('Server error, we will fix it soon');
+        throw error;
+      }
+    },
+
+    login: async (_: null,
+      { input }: { input: { email: string; password: string } }): Promise<object> => {
       try {
         const { password, email } = input;
         const user = await getConnection().getRepository(User).findOne({ where: { email }, relations: ['recipes'] });
@@ -54,7 +77,7 @@ export default {
     },
 
     signUp: async (_: null,
-      { input }: { input: { name: string; email: string; password: string } }) => {
+      { input }: { input: { name: string; email: string; password: string } }): Promise<User> => {
       const newUser = new User();
       newUser.name = input.name;
       newUser.email = input.email;
