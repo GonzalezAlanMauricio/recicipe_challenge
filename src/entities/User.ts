@@ -2,6 +2,7 @@
 import {
   Entity, PrimaryGeneratedColumn, Column, OneToMany,
 } from 'typeorm';
+import { IsEmail, MinLength } from 'class-validator';
 
 import Recipe from './Recipe';
 
@@ -11,9 +12,11 @@ export default class User {
   id: number;
 
   @Column()
+  @MinLength(3, { message: 'Must be at least 3 character long' })
   name: string;
 
   @Column()
+  @IsEmail({}, { message: 'Must be a email like example@gmail.com' })
   email: string;
 
   @Column()

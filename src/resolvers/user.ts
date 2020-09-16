@@ -8,6 +8,9 @@ import User from '../entities/User';
 import Recipe from '../entities/Recipe';
 
 import isAuthenticated from './middleware/index';
+import { userValidation } from './validations/index';
+
+interface UserInput { email: string; name: string; password?: string }
 
 export default {
   Query: {
@@ -42,8 +45,10 @@ export default {
       isAuthenticated(email);
       try {
         const userRepository = await getConnection().getRepository(User);
-        const userToUpdate = await userRepository.findOne(userId);
-        let userUpdated = { ...userToUpdate, ...input };
+        const userToUpdate = await userRepository.findOne(userId) as User;
+        let userUpdated = new User();
+        userUpdated = { ...userToUpdate, ...input };
+        await userValidation(userUpdated);
         if (input.password) {
           const hashPassword = await bcryptjs.hash(input.password, 12);
           userUpdated = { ...userUpdated, hashPassword };
@@ -77,12 +82,12 @@ export default {
     },
 
     login: async (_: null,
-      { input }: { input: { email: string; password: string } }): Promise<object> => {
+      { input }: { input: UserInput }): Promise<object> => {
       try {
         const { password, email } = input;
         const user = await getConnection().getRepository(User).findOne({ where: { email }, relations: ['recipes'] });
         if (!user) throw new UserInputError('The e-mail address or password you entered was incorrect');
-        const passwordIsValid = await bcryptjs.compare(password, user.hashPassword);
+        const passwordIsValid = await bcryptjs.compare(password!, user.hashPassword);
         if (!passwordIsValid) throw new UserInputError('The e-mail address or password you entered was incorrect');
         const token = jwt.sign({ email }, process.env.JWT_SECRET!, { expiresIn: '1d' });
         return { token };
@@ -95,16 +100,17 @@ export default {
     },
 
     signUp: async (_: null,
-      { input }: { input: { name: string; email: string; password: string } }): Promise<User> => {
+      { input }: { input: UserInput }): Promise<User> => {
       const newUser = new User();
       newUser.name = input.name;
       newUser.email = input.email;
-      newUser.hashPassword = await bcryptjs.hash(input.password, 12);
+      newUser.hashPassword = await bcryptjs.hash(input.password!, 12);
+      await userValidation({ ...newUser, password: input.password });
       try {
         const savedUser = await getManager().save(newUser);
         return savedUser;
-      } catch (error) {
-        console.log(error);
+      } catch (e) {
+        console.log(e);
         throw new Error('Server error, we will fix it soon');
       }
     },
