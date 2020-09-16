@@ -12,11 +12,11 @@ const startDBConnection = async () => {
   try {
     await createConnection({
       type: 'mysql',
-      host: 'localhost',
-      port: 3306,
-      username: 'root',
-      password: '1234',
-      database: 'challenge',
+      host: process.env.DB_HOST,
+      port: parseInt(process.env.DB_PORT!, 10),
+      username: process.env.DB_USERNAME,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_NAME,
       synchronize: true,
       logging: false,
       entities: [
