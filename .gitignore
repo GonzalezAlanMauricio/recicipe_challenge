@@ -1,6 +1,5 @@
 node_modules
 .eslintrc.json
 documentation
-build
 .vscode
 .env
