@@ -29,7 +29,7 @@ export default (): void => {
     },
 
   });
-  server.applyMiddleware({ app, path: '/recipes' });
+  server.applyMiddleware({ app, path: '/recipes', cors: true });
 
   app.listen(PORT, () => {
     console.log(`Server running in ${PORT}`);
