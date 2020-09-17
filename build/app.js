@@ -30,8 +30,10 @@ exports.default = () => {
             contextObj = { email: req.email, userId: req.userId };
             return contextObj;
         }),
+        introspection: true,
+        playground: true,
     });
-    server.applyMiddleware({ app, path: '/recipes' });
+    server.applyMiddleware({ app, path: '/recipes', cors: true });
     app.listen(PORT, () => {
         console.log(`Server running in ${PORT}`);
         console.log(`Graphql endpoint ${server.graphqlPath}`);
