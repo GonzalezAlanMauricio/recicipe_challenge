@@ -27,6 +27,8 @@ export default (): void => {
       contextObj = { email: req.email, userId: req.userId };
       return contextObj;
     },
+    introspection: true,
+    playground: true,
 
   });
   server.applyMiddleware({ app, path: '/recipes', cors: true });
