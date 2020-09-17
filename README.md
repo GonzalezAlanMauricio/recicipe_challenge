@@ -1,7 +1,10 @@
 ## About
 This is an API of recipes made in Node + Graphql + Typescript + TypeOrm + Apollo-server
 
-## Installation
+## Demo
+https://recipe0challenge.herokuapp.com/recipes
+
+## Local installation
 
 How to start the app:
 
