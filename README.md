@@ -22,7 +22,7 @@ $ npm install
 $ mv .env_Example .env
 ```
 - Create a mysql data base.
-- Change the content of the constants in .env to match your mysql date base
+- Change the content of the constants in .env to match your mysql database config
 - Start the server
 ```sh
 $ npm start
