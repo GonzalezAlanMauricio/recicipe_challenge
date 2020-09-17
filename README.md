@@ -175,9 +175,9 @@ query get_one_recipe {
 mutation add_recipe {
   createRecipe(
     input: {
-      name: "Neapolitan izza"
-      description: " Here’s a recipe for Neapolitan style pizza you can make at home, inspired by the best pizza in Naples Italy! "
-      ingredients:" 1/3 cup Easy Pizza Sauce: 3 ounces fresh mozzarella cheese (or about 3/4 cup shredded mozzarella) and Kosher salt "
+      name: "Neapolitan izza",
+      description: " Here’s a recipe for Neapolitan style pizza you can make at home, inspired by the best pizza in Naples Italy! ",
+      ingredients:" 1/3 cup Easy Pizza Sauce: 3 ounces fresh mozzarella cheese (or about 3/4 cup shredded mozzarella) and Kosher salt ",
       categoryId: 1
     }
   ) {
