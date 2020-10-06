@@ -33,7 +33,7 @@ export default {
     createRecipe: async (_: null,
       { input }: {
         input:
-        { name: string; description: string; categoryId: Category, ingredients: string };
+        { name: string; description: string; categoryId: Category; ingredients: string };
       }, { email, userId }: { email: string; userId: number }): Promise<Recipe> => {
       isAuthenticated(email);
       const newRecipe = new Recipe();
@@ -66,10 +66,13 @@ export default {
       isAuthenticated(email);
       try {
         const recipeRepository = await getConnection().getRepository(Recipe);
+        let category;
         const recipeToUpdate = await recipeRepository.findOne(id);
         if (!recipeToUpdate) throw new UserInputError('Recipe not found');
         const recipeUpdated = { ...recipeToUpdate, ...input };
-        const category = await getConnection().getRepository(Category).findOne(input.categoryId);
+        if (input.categoryId) {
+          category = await getConnection().getRepository(Category).findOne(input.categoryId);
+        }
         const user = await getConnection().getRepository(User).findOne(input.userId);
         if (user) {
           recipeUpdated.user = user;
